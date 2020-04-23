@@ -1,0 +1,28 @@
+docker cp D:/bigdata/M11/input_demo namenode:/tmp
+
+docker cp D:/bigdata/M11/stopwords namenode:/tmp
+
+docker cp D:/bigdata/M11/WordCount.jar namenode:/tmp
+
+docker exec -it namenode bin/bash
+
+cd tmp
+
+ls
+
+cd input
+
+ls
+
+cd ..
+
+cd stopwords
+
+ls
+
+(cat ...  to read file)
+
+hdfs dfs -rm -r output
+
+hdfs dfs -put stopwords stopwords
+hdfs dfs -cat output/part-r-00000
