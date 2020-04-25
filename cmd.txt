@@ -1,8 +1,8 @@
-docker cp D:/bigdata/M11/input_demo namenode:/tmp
+docker cp D:/bigdata/M11/input namenode:/tmp
 
 docker cp D:/bigdata/M11/stopwords namenode:/tmp
 
-docker cp D:/bigdata/M11/WordCount.jar namenode:/tmp
+docker cp D:\bigdata\M11\WordCount.jar namenode:\tmp
 
 docker exec -it namenode bin/bash
 

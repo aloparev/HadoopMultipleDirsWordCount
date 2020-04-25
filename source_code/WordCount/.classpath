@@ -100,5 +100,23 @@
 	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/common/lib/xmlenc-0.52.jar"/>
 	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/common/lib/xz-1.0.jar"/>
 	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/common/lib/zookeeper-3.4.6.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-2.7.7-tests.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/lib-examples/hsqldb-2.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/sources/hadoop-mapreduce-client-app-2.7.7-sources.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/sources/hadoop-mapreduce-client-app-2.7.7-test-sources.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/sources/hadoop-mapreduce-client-common-2.7.7-sources.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/sources/hadoop-mapreduce-client-common-2.7.7-test-sources.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/sources/hadoop-mapreduce-client-core-2.7.7-sources.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/sources/hadoop-mapreduce-client-core-2.7.7-test-sources.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/sources/hadoop-mapreduce-client-hs-2.7.7-sources.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/sources/hadoop-mapreduce-client-hs-2.7.7-test-sources.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/sources/hadoop-mapreduce-client-hs-plugins-2.7.7-sources.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/sources/hadoop-mapreduce-client-hs-plugins-2.7.7-test-sources.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/sources/hadoop-mapreduce-client-jobclient-2.7.7-sources.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/sources/hadoop-mapreduce-client-jobclient-2.7.7-test-sources.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/sources/hadoop-mapreduce-client-shuffle-2.7.7-sources.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/sources/hadoop-mapreduce-client-shuffle-2.7.7-test-sources.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/sources/hadoop-mapreduce-examples-2.7.7-sources.jar"/>
+	<classpathentry kind="lib" path="C:/hadoop-2.7.7/share/hadoop/mapreduce/sources/hadoop-mapreduce-examples-2.7.7-test-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
