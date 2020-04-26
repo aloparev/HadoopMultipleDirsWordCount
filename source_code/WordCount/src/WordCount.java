@@ -6,13 +6,11 @@ import org.apache.hadoop.fs.Path;
 import java.net.URI;
 import org.apache.hadoop.conf.*;
 import org.apache.hadoop.io.*;
-import org.apache.hadoop.mapred.JobConfigurable;
 import org.apache.hadoop.mapreduce.*;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 public class WordCount {
@@ -24,7 +22,7 @@ public class WordCount {
 
 		private final static Text one = new Text("1");
 		private Text word = new Text();
-		private ArrayList<String> stopwordList = new ArrayList<>();
+		
 
 		public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 			String line = value.toString();
@@ -33,16 +31,10 @@ public class WordCount {
 
 			String filePathString = ((FileSplit) context.getInputSplit()).getPath().toString();
 			String folderName = new Path(filePathString).getParent().getName().toLowerCase();// English
-			stopwordList = IOUtil.readFile(String.format("./%s.txt", folderName));
 
 			while (tokenizer.hasMoreTokens()) {
 
 				str = tokenizer.nextToken().toLowerCase();
-
-				if (stopwordList.contains(str)) {
-					continue;
-				}
-
 				word.set(String.format("%s_%s", folderName, str));// "english_youngest"
 
 				context.write(word, one);
@@ -53,35 +45,46 @@ public class WordCount {
 	public static class Reduce extends Reducer<Text, Text, Text, Text> {
 
 		private HashMap<String, TreeMap<Text, IntWritable>> allData = new HashMap<>();
+		private HashMap<String, ArrayList<String>> stopwordList = new HashMap<>();
 		private final int MAX_TOP = 10;
-
-		@Override
-		public void setup(Context context) throws IOException, InterruptedException {
-			allData = new HashMap<>();
-		}
 
 		@Override
 		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
+			String[] language_key = new Text(key).toString().split("_");
+			
+			if(language_key.length < 2) {
+				return;
+			}
+			
+			String language = language_key[0];// english
+			String str = language_key[1];
+			
+			if(!stopwordList.containsKey(language)) {
+				stopwordList.put(language, IOUtil.readFile(String.format("./%s.txt", language)));
+			}
+
+			//if <val> is in group stopwords?
+			if(stopwordList.get(language).contains(str)) {
+				return;
+			}
+			
 			int sum = 0;
 
 			for (Text val : values) {
 				sum += Integer.parseInt(val.toString());
 			}
 
-			String[] language_key = new Text(key).toString().split("_");
-			String language = language_key[0];// english
-
-			key.set(language_key[1]);// youngest
+			key.set(str);// youngest
 
 			if (allData.containsKey(language)) {
 
 				allData.get(language).put(new Text(key), new IntWritable(sum));
 			} else {
-				TreeMap<Text, IntWritable> val = new TreeMap<>();
+				TreeMap<Text, IntWritable> treeMap = new TreeMap<>();
 
-				val.put(new Text(key), new IntWritable(sum));
-				allData.put(language, val);
+				treeMap.put(new Text(key), new IntWritable(sum));
+				allData.put(language, treeMap);
 			}
 
 		}
