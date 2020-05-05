@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.apache.hadoop.filecache.DistributedCache;
 import org.apache.hadoop.fs.Path;
 
 import java.net.URI;
@@ -14,6 +15,8 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WordCount {
     public static final String[] languages = new String[]{"dutch", "english", "french", "german", "italian",
@@ -108,29 +111,40 @@ public class WordCount {
         }
     }
 
-    // args = [<language>, <input path>, <output path>]
     public static void main(String[] args) throws Exception {
-        Configuration conf = new Configuration();
-        // check 2 params
-        @SuppressWarnings("deprecation")
-        Job job = new Job(conf, "WordCount");
-        job.setJarByClass(WordCount.class);
-        job.setMapperClass(Map.class);
-        job.setReducerClass(Reduce.class);
-        job.setInputFormatClass(TextInputFormat.class);
-        job.setOutputFormatClass(TextOutputFormat.class);
-        job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(Text.class);
-        // add files contain stoppwords
-        URI[] files = new URI[languages.length];
-        for (int i = 0; i < languages.length; i++) {
-            files[i] = new URI(String.format("stopwords/%s.txt", languages[i]));
+        Logger log = LoggerFactory.getLogger(WordCount.class);
+        log.info("hadoop word count up and running");
+
+        if(args.length != 2) {
+            log.info("check the number of args!");
+        } else {
+            String in = args[0];
+            String out = args[1];
+            log.info("run args: in=" + args[0] + " out=" + args[1]);
+
+            Configuration conf = new Configuration();
+            // check 2 params
+            @SuppressWarnings("deprecation")
+            Job job = new Job(conf, "WordCountTop10");
+            job.setJarByClass(WordCount.class);
+            job.setMapperClass(Map.class);
+            job.setReducerClass(Reduce.class);
+            job.setInputFormatClass(TextInputFormat.class);
+            job.setOutputFormatClass(TextOutputFormat.class);
+            job.setOutputKeyClass(Text.class);
+            job.setOutputValueClass(Text.class);
+            // add files contain stoppwords
+            URI[] files = new URI[languages.length];
+            for (String language : languages) {
+    //            files[i] = new URI(String.format("stopwords/%s.txt", languages[i]));
+                DistributedCache.addCacheFile(new URI(String.format("stopwords/%s.txt", language)), job.getConfiguration());
+            }
+    //		queue folders
+    //        job.setCacheFiles(files);
+    //        FileInputFormat.setInputDirRecursive(job, true);
+            FileInputFormat.addInputPath(job, new Path(in));
+            FileOutputFormat.setOutputPath(job, new Path(out));
+            job.waitForCompletion(true);
         }
-//		queue folders
-        job.setCacheFiles(files);
-        FileInputFormat.setInputDirRecursive(job, true);
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
-        job.waitForCompletion(true);
     }
 }
