@@ -19,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class WordCount {
+    static Logger log = LoggerFactory.getLogger(WordCount.class);
+
     public static final String[] languages = new String[]{"dutch", "english", "french", "german", "italian",
             "russian", "spanish", "ukrainian"};
 
@@ -28,11 +30,14 @@ public class WordCount {
 
 //        runs for every folder
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+            log.info("map start");
             String line = value.toString();
             StringTokenizer tokenizer = new StringTokenizer(line);
             String str = "";
             String filePathString = ((FileSplit) context.getInputSplit()).getPath().toString();
             String folderName = new Path(filePathString).getParent().getName().toLowerCase();// English
+            log.info("folderName=" + folderName);
+
 //			loop1 >> glue language and words
             while (tokenizer.hasMoreTokens()) {
                 str = tokenizer.nextToken().toLowerCase();
@@ -52,6 +57,7 @@ public class WordCount {
         @Override
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 //language,word
+            log.info("reducer start");
             String[] language_key = new Text(key).toString().split("_");
             if (language_key.length < 2) {
                 return;
@@ -112,7 +118,7 @@ public class WordCount {
     }
 
     public static void main(String[] args) throws Exception {
-        Logger log = LoggerFactory.getLogger(WordCount.class);
+
         log.info("hadoop word count up and running");
 
         if(args.length != 2) {
@@ -137,6 +143,7 @@ public class WordCount {
             URI[] files = new URI[languages.length];
             for (String language : languages) {
     //            files[i] = new URI(String.format("stopwords/%s.txt", languages[i]));
+                log.info(String.format("stopwords/%s.txt", language));
                 DistributedCache.addCacheFile(new URI(String.format("stopwords/%s.txt", language)), job.getConfiguration());
             }
     //		queue folders
