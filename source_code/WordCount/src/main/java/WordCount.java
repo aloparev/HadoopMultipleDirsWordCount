@@ -2,7 +2,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 
-import org.apache.hadoop.filecache.DistributedCache;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.Path;
 
 import java.net.URI;
@@ -15,12 +15,9 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class WordCount {
-    static Logger log = LoggerFactory.getLogger(WordCount.class);
-
     public static final String[] languages = new String[]{"dutch", "english", "french", "german", "italian",
             "russian", "spanish", "ukrainian"};
 
@@ -66,7 +63,7 @@ public class WordCount {
             String str = language_key[1];
 //			load stopwords
             if (!stopwordList.containsKey(language)) {
-                stopwordList.put(language, IOUtil.readFile(String.format("./%s.txt", language)));
+                stopwordList.put(language, Utils.readFile(String.format("./%s.txt", language)));
             }
 //			if not a stopword put in output map
             //if <val> is in group stopwords?
@@ -118,41 +115,49 @@ public class WordCount {
     }
 
     public static void main(String[] args) throws Exception {
-
         log.info("hadoop word count up and running");
+        long javaRunTimeTotalMs = 0;
 
         if(args.length != 2) {
             log.info("check the number of args!");
         } else {
+            URI[] stopwordFiles;
             String in = args[0];
             String out = args[1];
-            log.info("run args: in=" + args[0] + " out=" + args[1]);
-
             Configuration conf = new Configuration();
-            // check 2 params
-            @SuppressWarnings("deprecation")
-            Job job = new Job(conf, "WordCountTop10");
-            job.setJarByClass(WordCount.class);
-            job.setMapperClass(Map.class);
-            job.setReducerClass(Reduce.class);
-            job.setInputFormatClass(TextInputFormat.class);
-            job.setOutputFormatClass(TextOutputFormat.class);
-            job.setOutputKeyClass(Text.class);
-            job.setOutputValueClass(Text.class);
+            log.info("\trun args: in=" + args[0] + " out=" + args[1]);
 
-            // add files contain stoppwords
-            URI[] files = new URI[languages.length];
+//            @SuppressWarnings("deprecation")
+//            Job job = new Job(conf, "WordCountTop10");
+//            job.setJarByClass(WordCount.class);
+//            job.setMapperClass(Map.class);
+//            job.setReducerClass(Reduce.class);
+//            job.setInputFormatClass(TextInputFormat.class);
+//            job.setOutputFormatClass(TextOutputFormat.class);
+//            job.setOutputKeyClass(Text.class);
+//            job.setOutputValueClass(Text.class);
+
+            // add stopwords globally to hadoop and run java counter at the same time
+            stopwordFiles = new URI[languages.length];
             for (int i = 0; i < languages.length; i++) {
-                files[i] = new URI(String.format("stopwords/%s.txt", languages[i]));
-                log.info(String.format("stopwords/%s.txt", languages[i]));
-//                DistributedCache.addCacheFile(new URI(String.format("stopwords/%s.txt", language)), job.getConfiguration());
+                String language = languages[i];
+                stopwordFiles[i] = new URI(String.format("stopwords/%s_stopwords.txt", language));
+                log.info(String.format("stopwords/%s_stopwords.txt", language));
+
+                System.out.println("java parallel: start processing language=" + language);
+                WordCountJavaResult javaResult = WordCountJavaParallel.getWordCountResultWithTime(language, Utils.readAllFilesFromDir(language), Utils.readStopwords(language));
+                System.out.println("java parallel: top10words=" + javaResult.top10Words);
+                System.out.println("java parallel: run time in ms=" + javaResult.runTimeMs);
+                System.out.println("-------------------------\n");
+                javaRunTimeTotalMs += javaResult.runTimeMs;
             }
-    //		queue folders
-            job.setCacheFiles(files);
-            FileInputFormat.setInputDirRecursive(job, true);
-            FileInputFormat.addInputPath(job, new Path(in));
-            FileOutputFormat.setOutputPath(job, new Path(out));
-            job.waitForCompletion(true);
+            System.out.println("Total java run time in seconds: " + javaRunTimeTotalMs/1000);
+
+//            job.setCacheFiles(stopwordFiles);
+//            FileInputFormat.setInputDirRecursive(job, true);
+//            FileInputFormat.addInputPath(job, new Path(in));
+//            FileOutputFormat.setOutputPath(job, new Path(out));
+//            job.waitForCompletion(true);
         }
     }
 }
