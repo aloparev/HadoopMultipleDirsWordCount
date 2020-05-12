@@ -142,16 +142,16 @@ public class WordCount {
             for (int i = 0; i < languages.length; i++) {
                 String language = languages[i];
                 stopwordFiles[i] = new URI(String.format("stopwords/%s_stopwords.txt", language));
-                log.info(String.format("stopwords/%s_stopwords.txt", language));
+//                log.info(String.format("stopwords/%s_stopwords.txt", language));
 
-                System.out.println("java parallel: start processing language=" + language);
+                System.out.println("java parallel: start processing " + language);
                 WordCountJavaResult javaResult = WordCountJavaParallel.getWordCountResultWithTime(language, Utils.readAllFilesFromDir(language), Utils.readStopwords(language));
                 System.out.println("java parallel: top10words=" + javaResult.top10Words);
                 System.out.println("java parallel: run time in ms=" + javaResult.runTimeMs);
-                System.out.println("-------------------------\n");
+                System.out.println("------------------------------------");
                 javaRunTimeTotalMs += javaResult.runTimeMs;
             }
-            System.out.println("Total java run time in seconds: " + javaRunTimeTotalMs/1000);
+            System.out.println("\njava parallel: total run time in seconds: " + javaRunTimeTotalMs/1000);
 
 //            job.setCacheFiles(stopwordFiles);
 //            FileInputFormat.setInputDirRecursive(job, true);
