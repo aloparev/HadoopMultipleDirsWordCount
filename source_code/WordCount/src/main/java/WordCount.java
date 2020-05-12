@@ -139,16 +139,17 @@ public class WordCount {
             job.setOutputFormatClass(TextOutputFormat.class);
             job.setOutputKeyClass(Text.class);
             job.setOutputValueClass(Text.class);
+
             // add files contain stoppwords
             URI[] files = new URI[languages.length];
-            for (String language : languages) {
-    //            files[i] = new URI(String.format("stopwords/%s.txt", languages[i]));
-                log.info(String.format("stopwords/%s.txt", language));
-                DistributedCache.addCacheFile(new URI(String.format("stopwords/%s.txt", language)), job.getConfiguration());
+            for (int i = 0; i < languages.length; i++) {
+                files[i] = new URI(String.format("stopwords/%s.txt", languages[i]));
+                log.info(String.format("stopwords/%s.txt", languages[i]));
+//                DistributedCache.addCacheFile(new URI(String.format("stopwords/%s.txt", language)), job.getConfiguration());
             }
     //		queue folders
-    //        job.setCacheFiles(files);
-    //        FileInputFormat.setInputDirRecursive(job, true);
+            job.setCacheFiles(files);
+            FileInputFormat.setInputDirRecursive(job, true);
             FileInputFormat.addInputPath(job, new Path(in));
             FileOutputFormat.setOutputPath(job, new Path(out));
             job.waitForCompletion(true);
