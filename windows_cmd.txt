@@ -1,0 +1,18 @@
+C:\Windows\System32\cmd.exe /k "M: & cd M:\hadoop-3.0.0-alpha2\sbin"
+start-all.cmd
+
+hdfs dfs -rm -r /output
+hdfs dfs -rm -r /user/nguyen/stopwords
+
+hdfs dfs -put Y:\sonst\stopwords /user/nguyen/
+
+hadoop jar Y:/bd/WordCount.jar /input /output
+hadoop jar Y:/bd/WordCount.jar /input/Dutch /output
+
+stop-all.cmd
+
+
+//rm: Cannot delete /output. Name node is in safe mode.
+hdfs dfsadmin -safemode leave
+
+hdfs dfs -get /output
