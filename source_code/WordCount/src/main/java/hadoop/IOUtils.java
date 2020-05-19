@@ -1,6 +1,7 @@
 package hadoop;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 
@@ -20,6 +21,9 @@ public class IOUtils {
             
             bf.close();
 
+        } catch(FileNotFoundException e) {
+        	System.out.println("File "+ fileName +" not found");
+        	return null;
         } catch (Exception e) {
             e.printStackTrace();
         }

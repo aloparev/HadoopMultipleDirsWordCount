@@ -14,11 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class WordCount {
-
-	static Logger log = LoggerFactory.getLogger(WordCount.class);
 	
 	public static final String[] languages = new String[] { "dutch", "english", "french", "german", "italian",
 			"russian", "spanish", "ukrainian" };
+	
+	static Logger log = LoggerFactory.getLogger(WordCount.class);
 
 	public static void main(String[] args) throws Exception {
 
@@ -56,8 +56,8 @@ public class WordCount {
 			log.info("Output folder already exists... Overwriting");
 			fs.delete(outPath, true);
 		}
-		
 		//End: check if input-output-stopwords exist
+		
 		@SuppressWarnings("deprecation")
 		Job job = new Job(conf, "WordCount");
 		

@@ -58,7 +58,6 @@ public class Utils {
 		List<String> text;
 		try {
 			Path path = getResourcePath(dirName);
-//			log.info(path.toString());
 			text = readAllFilesFromPath(dirName, path);
 		} catch (IOException | URISyntaxException e) {
 			System.out.println("Could not read files for dirName=" + dirName);

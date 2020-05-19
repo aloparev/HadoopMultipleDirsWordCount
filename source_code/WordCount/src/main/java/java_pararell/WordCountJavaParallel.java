@@ -9,9 +9,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class WordCountJavaParallel {
-    //private static final String splitRegex1 = "[\\s\\d\\p{P}]+(?<!-)";
+    
+	//private static final String splitRegex1 = "[\\s\\d\\p{P}]+(?<!-)";
     private static final String splitRegex2 = "\\P{L}+";
-   // private static final String splitRegex3 = "\\W+";
+    //private static final String splitRegex3 = "\\W+";
+    //private static final String splitRegex4 = "\\P{L}+ | (?<!\\p{L})\\p{L}(?!\\p{L})";
+    //private static final String splitRegex5 = "\\P{L}+ | \\b.{0,2}\\b";
 
     public static WordCountJavaResult getWordCountResultWithTime(String language, List<String> text, List<String> stopwords) {
         long startTime = System.nanoTime();
@@ -30,7 +33,7 @@ public class WordCountJavaParallel {
                 .flatMap(Stream::of)
                 .map(String::toLowerCase)
                 .map(word -> word.replaceAll(splitRegex2, ""))
-                .filter(word -> !stopwords.contains(word));
+                .filter(word -> !stopwords.contains(word) && word.length() > 2);
     }
 
     private static List<Map.Entry<String, Long>> countWords(Supplier<Stream<String>> words) {

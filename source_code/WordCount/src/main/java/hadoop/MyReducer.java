@@ -33,7 +33,13 @@ public class MyReducer extends Reducer<Text, Text, Text, Text> {
         
 		//load stopwords
         if (!stopwordList.containsKey(language)) {
-            stopwordList.put(language, IOUtils.readFileStopword(language + ".txt"));
+        	HashSet<String> stopwords = IOUtils.readFileStopword(language + ".txt");
+        	
+        	if(stopwords == null) {//file not found, do nothing
+        		return;
+        	}
+        	
+            stopwordList.put(language, stopwords);
         } 
         
 		//if not a stopword put in output map

@@ -25,6 +25,7 @@ x
 y
 ij
 z
+gij
 zowat
 gewoon
 kon
@@ -133,6 +134,7 @@ nochtans
 drie
 daardoor
 af
+lisa
 ander
 ge
 bij
@@ -142,6 +144,7 @@ nergens
 tamelijk
 reeds
 hierboven
+hier
 doe
 geweest
 vrij
@@ -355,6 +358,8 @@ eerst
 zich
 laatst
 eerlang
+eene
+eenen
 maakte
 eigenlijk
 zes
