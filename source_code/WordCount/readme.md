@@ -5,10 +5,10 @@
 - [x] merge utils
 - [ ] try htw hadoop cluster >> why errors?
 - [ ] write how to get up and running
-- [ ] write hadoop deployment script
+- [x] write hadoop deployment script
 
 ## get started
 1. mvn clean package
-2. copy resources (and jar) to hadoop: hdfs dfs -put resources
-3. run jar: hadoop jar WordCount.jar resources out
+2. copy resources (and jar) to hadoop: ~~hdfs dfs -put resources~~ scripts/runDockerAndCopyFiles
+3. cp into /usr/local/hadoop and run jar: hadoop jar WordCount.jar resources out
 

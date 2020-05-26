@@ -10,6 +10,7 @@ echo "started docker container in the background: ${name}"
 
 docker cp src/main/resources ${name}:${hadoop}
 docker cp scripts/${script} ${name}:${hadoop}
+docker cp target/WordCount.jar ${name}:${hadoop}
 echo "copy files to ${name} OK"
 
 docker exec -it ${name} bash -x ${hadoop}/${script}
