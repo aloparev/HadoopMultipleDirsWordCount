@@ -1,18 +1,15 @@
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import java_pararell.Utils;
 import java_pararell.WordCountJavaParallel;
 import java_pararell.WordCountJavaResult;
+import utils.Utils;
 
 public class JavaPararellTest {
 
-	
+
 	WordCountJavaParallel WCParallel;
 	String[] languages;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		WCParallel = new WordCountJavaParallel();

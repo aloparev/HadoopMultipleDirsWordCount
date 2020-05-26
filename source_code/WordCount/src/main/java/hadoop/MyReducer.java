@@ -11,6 +11,8 @@ import java.util.Map.Entry;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
+import static utils.Utils.readFileStopword;
+
 public class MyReducer extends Reducer<Text, Text, Text, Text> {
 
 	//language + counter or stopwords
@@ -23,36 +25,36 @@ public class MyReducer extends Reducer<Text, Text, Text, Text> {
 	public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
 		String[] language_key = key.toString().split("_");
-		
+
 		if(language_key.length < 2) {
 			return;
 		}
-		
+
 		String language = language_key[0];
 		String str = language_key[1];
-        
+
 		//load stopwords
         if (!stopwordList.containsKey(language)) {
-        	HashSet<String> stopwords = IOUtils.readFileStopword(language + ".txt");
-        	
+        	HashSet<String> stopwords = readFileStopword(language + ".txt");
+
         	if(stopwords == null) {//file not found, do nothing
         		return;
         	}
-        	
+
             stopwordList.put(language, stopwords);
-        } 
-        
+        }
+
 		//if not a stopword put in output map
         if (stopwordList.get(language).contains(str)) {
         	return;
         }
-        
+
 		int sum = 0;
 
 		for (Text val : values) {
 			sum += Integer.parseInt(val.toString());
 		}
-		
+
 		if (allData.containsKey(language)) {
 
 			allData.get(language).put(str, sum);
@@ -79,7 +81,7 @@ public class MyReducer extends Reducer<Text, Text, Text, Text> {
 
 		/**
 		 * print
-		 * z.B.: 
+		 * z.B.:
 		 *  ------------------------------------
 		 * dutch
 		 * top 10 words=[den=1520, t=699, gij=627, zich=518, zoo=501, eene=488, u=418, der=375, marten=330, baas=303]

@@ -5,16 +5,16 @@ import java.nio.file.Paths;
 
 import org.junit.Test;
 
-import hadoop.IOUtils;
+import utils.Utils;
 
 public class HadoopTest {
 
 	@Test
 	public void readStopwords() {
-		
+
 		try {
 			String uri = Paths.get(Thread.currentThread().getContextClassLoader().getResource("stopwords/english.txt").toURI()).toString();
-			assertTrue(IOUtils.readFileStopword(uri).size() > 0);
+			assertTrue(Utils.readFileStopword(uri).size() > 0);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
