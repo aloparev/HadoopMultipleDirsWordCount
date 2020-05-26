@@ -1,16 +1,11 @@
-package java_pararell;
-
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,27 +16,30 @@ import java.nio.file.Path;
 
 @Slf4j
 public class Utils {
-    public static ArrayList<String> readFile(String fileName) {
- 
-        BufferedReader bf = null;
-        ArrayList<String> rs = new ArrayList<String>();
-        try {
-        	//read UTF-8 encoded data from a file
-        	bf = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"));
-        	String line = "";
-        	
-            while ((line = bf.readLine()) != null) {
-                rs.add(line);
-            }
-            
-            bf.close();
+	public static HashSet<String> readFileStopword(String fileName) {
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        return rs;
-    }
+		HashSet<String> rs = new HashSet<String>();
+
+		try {
+			//read UTF-8 encoded data from a file
+			BufferedReader bf = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"));
+			String line = "";
+
+			while ((line = bf.readLine()) != null) {
+				rs.add(line);
+			}
+
+			bf.close();
+
+		} catch(FileNotFoundException e) {
+			System.out.println("File "+ fileName +" not found");
+			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return rs;
+	}
 
 	public static List<String> readStopwords(String fileName) {
 		List<String> stopwords = emptyList();
