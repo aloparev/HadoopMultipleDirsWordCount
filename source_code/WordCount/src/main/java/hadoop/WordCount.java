@@ -37,8 +37,7 @@ public class WordCount {
 		//Start: check if input-output-stopwords exist
 		Path inPath = new Path(args[0]);
 		Path outPath = new Path(args[1]);
-		Path stopwordsPath = new Path("/user/"+System.getProperty("user.name")+"/stopwords");
-
+		Path stopwordsPath = new Path("/user/" + System.getProperty("user.name") + "/stopwords");
 		FileSystem fs = FileSystem.get(conf);
 
 		if (!fs.exists(stopwordsPath)) {
