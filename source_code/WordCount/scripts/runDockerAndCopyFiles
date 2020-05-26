@@ -1,0 +1,19 @@
+#!/bin/bash
+
+name=""
+script="prepareEnvironment"
+hadoop="/usr/local/hadoop"
+
+#docker run -dt zoltannz/hadoop-ubuntu:2.8.1
+name=$(docker ps | grep -Eow '(\w+_\w+)$')
+echo "started docker container in the background: ${name}"
+
+docker cp src/main/resources ${name}:${hadoop}
+docker cp scripts/${script} ${name}:${hadoop}
+echo "copy files to ${name} OK"
+
+docker exec -it ${name} bash -x ${hadoop}/${script}
+echo "put files to hdfs OK"
+
+echo "connecting to the bash ..."
+docker exec -it ${name} /bin/bash

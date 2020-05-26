@@ -1,0 +1,7 @@
+#!/bin/bash
+
+hadoop="/usr/local/hadoop"
+put="${hadoop}/bin/hdfs dfs -put"
+
+${put} ${hadoop}/resources/stopwords
+${put} ${hadoop}/resources
