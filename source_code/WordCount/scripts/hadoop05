@@ -1,0 +1,6 @@
+#!/bin/bash
+
+hdfs dfs -put resources/stopwords
+hdfs dfs -put resources
+hadoop jar WordCount.jar resources out
+hdfs dfs -cat out/part-r-00000
