@@ -15,20 +15,28 @@ import static utils.Utils.readFileStopword;
 
 public class MyReducer extends Reducer<Text, Text, Text, Text> {
 
-	//language + counter or stopwords
+	/**
+	 * This variable (allData) contains the words and the counter of words for each language
+	 * key:language
+	 * value: {key: word, value: counter of the word} 
+	 */
 	private HashMap<String, HashMap<String, Integer>> allData = new HashMap<>();
+	
+	/**
+	 * contains stopword lists for each language
+	 * key:language, value: stopwords of the language
+	 */
 	private HashMap<String, HashSet<String>> stopwordList = new HashMap<>();
 	private final int MAX_TOP = 10;
 
-	//key = language_word, counter
+	/**
+	 * key: language_word
+	 * values: counter of word
+	 */
 	@Override
 	public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
 		String[] language_key = key.toString().split("_");
-
-		if(language_key.length < 2) {
-			return;
-		}
 
 		String language = language_key[0];
 		String str = language_key[1];
@@ -71,6 +79,7 @@ public class MyReducer extends Reducer<Text, Text, Text, Text> {
 	@Override
 	protected void cleanup(Context context) throws IOException, InterruptedException {
 
+		//Create a comparator to compare and sort
 		Comparator<Entry<String, Integer>> comparator = new Comparator<Entry<String, Integer>>() {
 
 			@Override
@@ -81,7 +90,7 @@ public class MyReducer extends Reducer<Text, Text, Text, Text> {
 
 		/**
 		 * print
-		 * z.B.:
+		 * EX:
 		 *  ------------------------------------
 		 * dutch
 		 * top 10 words=[den=1520, t=699, gij=627, zich=518, zoo=501, eene=488, u=418, der=375, marten=330, baas=303]
@@ -90,14 +99,18 @@ public class MyReducer extends Reducer<Text, Text, Text, Text> {
 		 */
 		for (Entry<String, HashMap<String, Integer>> entry : allData.entrySet()) {
 
+			//create a list of word and counter
+			List<Entry<String, Integer>> values = new ArrayList<>(entry.getValue().entrySet());
+			
+			//sort descending by counter
+			Collections.sort(values, comparator);
+			
 			StringBuilder sb = new StringBuilder("------------------------------------\n");
 			sb.append(entry.getKey());//print name of language
 			sb.append("\nTop 10 words=");
-			List<Entry<String, Integer>> values = new ArrayList<>(entry.getValue().entrySet());
-			Collections.sort(values, comparator);
 			sb.append(values.subList(0, values.size() > MAX_TOP ? MAX_TOP : values.size()));
+
 			context.write(new Text(sb.toString()), new Text("\n"));
 		}
-
 	}
 }

@@ -19,6 +19,8 @@ public class WordCount {
 	public static final String[] languages = new String[] { "dutch", "english", "french", "german", "italian",
 			"russian", "spanish", "ukrainian" };
 
+	private static Logger log = LoggerFactory.getLogger(WordCount.class);
+	
 	public static void main(String[] args) throws Exception {
 
 		log.info("hadoop word count up and running");
