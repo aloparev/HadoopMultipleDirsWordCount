@@ -10,7 +10,6 @@ name=$(docker ps | grep -Eow '(\w+_\w+)$')
 echo "started docker container in the background: ${name}"
 
 # docker cp src/main/resources ${name}:${hadoop}
-#docker cp scripts/${script} ${name}:${hadoop}
 # docker exec -it ${name} ${put} ${hadoop}/resources/stopwords
 docker exec -it ${name} ${put} ${hadoop}/resources
 # docker cp target/WordCount.jar ${name}:${hadoop}

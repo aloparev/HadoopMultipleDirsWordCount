@@ -24,6 +24,8 @@ w
 x
 y
 z
+ch
+si
 forse
 chicchessia
 pure
