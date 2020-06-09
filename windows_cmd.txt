@@ -1,18 +1,28 @@
+====START====
 C:\Windows\System32\cmd.exe /k "M: & cd M:\hadoop-3.0.0-alpha2\sbin"
 start-all.cmd
 
+===STOP====
+stop-all.cmd
+
+====REMOVE====
 hdfs dfs -rm -r /output
 hdfs dfs -rm -r /user/nguyen/stopwords
 
-hdfs dfs -put Y:\sonst\stopwords /user/nguyen/
+====COPY====
+hdfs dfs -put Y:\bd\stopwords \user\nguyen\
+hdfs dfs -put Y:\bd\input \
 
+====EXECUTE JAR====
 hadoop jar Y:/bd/WordCount.jar /input /output
-hadoop jar Y:/bd/WordCount.jar /input/Dutch /output
+hadoop jar Y:/bd/WordCount.jar /input/english /output
+hadoop jar Y:/bd/WordCount.jar /input/dutch /output
+hadoop jar Y:/bd/WordCount.jar /input/german /output
+hadoop jar Y:/bd/WordCount.jar /input/russian /output
 
-stop-all.cmd
-
-
-//rm: Cannot delete /output. Name node is in safe mode.
+====EXIT SAFE MODE (Cannot delete /output. Name node is in safe mode)====
 hdfs dfsadmin -safemode leave
 
-hdfs dfs -get /output
+====RESULT====
+READ: hdfs dfs -cat /output/part-r-00000
+EXPORT (in folder sbin): hdfs dfs -get /output
