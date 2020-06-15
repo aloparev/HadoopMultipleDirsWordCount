@@ -1,46 +1,25 @@
- hdfs dfsadmin -safemode leave
+======COPY DATA TO HDFS======
+docker cp D:\M11\input namenode:/tmp
+docker cp D:\M11\stopwords namenode:/tmp
+docker cp D:\M11\WordCount.jar namenode:/tmp
 
-docker cp D:/bigdata/input/input namenode:/tmp
+======LEAVE SAFEMODE=====
+hdfs dfsadmin -safemode leave
 
-
-docker cp D:/bigdata/M11/input namenode:/tmp
-
-docker cp D:/bigdata/M11/stopwords namenode:/tmp
-
-docker cp D:\bigdata\M11\WordCount.jar namenode:\tmp
-
+======LOG IN TO HADOOP=====
 docker exec -it namenode bin/bash
 
+======INIT======
 cd tmp
-
-ls
-
-cd input
-rm -r desktop.ini
-rm -r */desktop.ini
-cd ..
-cd stopwords
-rm -r desktop.ini
-cd ..
-hdfs dfsadmin -safemode leave
 hdfs dfs -mkdir -p /user/root
 hdfs dfs -put input ./
 hdfs dfs -put stopwords ./
 
-cd input
+======EXECUTE=====
+cd tmp
+hadoop jar WordCount.jar input output
 
-ls
-
-cd ..
-
-cd stopwords
-
-ls
-
-(cat ...  to read file)
-
-hdfs dfs -rm -r output
-
-hdfs dfs -put stopwords stopwords
-hdfs dfs -cat output/part-r-00000
-hadoop jar WordCount.jar input_demo output
+======REST======
+rm -r desktop.ini
+rm -r */desktop.ini
+cd..
