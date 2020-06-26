@@ -5,14 +5,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
-
-import static utils.Utils.readFileStopword;
 
 public class MyReducer extends Reducer<Text, Text, Text, Text> {
 
@@ -27,13 +24,6 @@ public class MyReducer extends Reducer<Text, Text, Text, Text> {
 	 */
 	private HashMap<String, HashMap<String, Integer>> allData = new HashMap<>();
 
-	/**
-	 * contains stopword lists for each language
-	 * 
-	 * key:language
-	 * value: stopwords of the language
-	 */
-	private HashMap<String, HashSet<String>> stopwordList = new HashMap<>();
 	private final int MAX_TOP = 10;
 
 	/**
@@ -45,24 +35,6 @@ public class MyReducer extends Reducer<Text, Text, Text, Text> {
 		String[] language_key = key.toString().split("_");
 		String language = language_key[0]; //language
 		String str = language_key[1]; //word
-
-		// load stopwords
-		if (!stopwordList.containsKey(language)) {
-
-			HashSet<String> stopwords = readFileStopword(language + ".txt");
-
-			if (stopwords == null) {// file not found, do nothing
-				return;
-			}
-
-			//add the stopwords list of the associated language to the general list
-			stopwordList.put(language, stopwords);
-		}
-
-		// if the word is stopword
-		if (stopwordList.get(language).contains(str)) {
-			return;
-		}
 
 		//calculate the counter of word
 		int sum = 0;
